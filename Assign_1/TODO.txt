@@ -1,0 +1,38 @@
+Database:
+    Users:
+        - workerID
+        - workerName
+        - workerPassword
+        - workerPermissions
+
+    Components:
+        - componentID
+        - componentName
+        - componentDescription
+        - componentCategory
+        - componentAmount
+
+    Transactions:
+        - transactionID
+        - workerID
+        - transactionTime
+        - transactionAmount
+
+Python app:
+    - Login page ✅
+        - To fix:
+            - Look for possible exploits
+
+    - Home page
+        - Add redirects to navbar elements
+        - Make function for Order by selector
+    
+    
+    - Register component page (Perm 1)
+        - Setup
+
+    - Update components       (Perm 1)
+        - Setup
+
+    - Checkout component page (Perm 0)
+
