@@ -4,11 +4,11 @@
 2. Open project folder in vscode
 3. Setup a python environment with
 ```
-python -m venv venv
+python -m venv .venv
 ```
 4. Activate the environment
 ```
-./venv/Scripts/activate.ps1
+./.venv/Scripts/activate.ps1
 ```
 5. Install the dependencies
 ```
