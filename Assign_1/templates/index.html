@@ -24,23 +24,26 @@
                 </button>
 
                 <div class="collapse navbar-collapse d-flex justify-content-between" id="navbarNav">
-                  <ul class="navbar-nav">
-                    <li class="nav-item active">
-                      <a class="nav-link" href="#">Home</a>
-                    </li>
-                    <li class="nav-item">
-                      <a class="nav-link" href="#">Register component</a>
-                    </li>
-                    <li class="nav-item">
-                      <a class="nav-link" href="#">Update component</a>
-                    </li>
-                  </ul>
+                    <ul class="navbar-nav">
+                            <li class="nav-item active">
+                                <a class="nav-link" href="/">Home</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="register_component">Register component</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="update_component">Update component</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="log">Log</a>
+                            </li>
+                    </ul>
 
-                  <ul class="navbar-nav"> 
-                    <li class="nav-item">
-                        <a class="btn btn-light" href="logout">Logout</a>
-                    </li>
-                </ul>
+                    <ul class="navbar-nav"> 
+                        <li class="nav-item">
+                            <a class="btn btn-light" href="logout">Logout</a>
+                        </li>
+                    </ul>
                 </div>
             </nav>
         </div>
@@ -54,18 +57,27 @@
             <form method="POST">
                 <div class="category-container">
                     <label for="category_select">Category</label>
-                    <select name="select" class="form-select form-select-lg">
-                        {% for item in data %}
-                            <option value="{{ item[0] }}">{{ item[0] }}</option>
+                    <select name="select_category" class="form-select form-select-lg">
+                        {% for category in data|map(attribute=2)|unique %}
+                            {% if category == selected_cat%}
+                                <option value="{{ category }} " selected>{{ category  }}</option>
+                            {% else %}
+                                <option value="{{ category }}">{{ category  }}</option>
+                            {% endif %}
                         {% endfor %}
                     </select>
                 </div>
                     
                 <div class="order-container">
-                    <label for="category_select">Order by</label>
-                    <select name="select" class="form-select form-select-lg">
-                        <option value="value1">Ascending</option>
-                        <option value="value2">Descending</option>
+                    <label for="category_select">Order by stock</label>
+                    <select name="select_sort" class="form-select form-select-lg">
+                        {% if order_select == "select_asc" %}
+                            <option value="select_asc" selected>Ascending</option>
+                            <option value="select_desc">Descending</option>
+                        {% else %}
+                            <option value="select_asc">Ascending</option>
+                            <option value="select_desc" selected>Descending</option>
+                        {% endif %}
                     </select>
                 </div>
                 
@@ -87,7 +99,7 @@
                         <th>Amount in stock</th>
                     </tr>
                     {% for item in data %}
-                        {% if item[0] == selected_value %}
+                        {% if item[2] == selected_value %}
                             <tr>
                                 <td>{{ item[0] }}</td>
                                 <td>{{ item[1] }}</td>

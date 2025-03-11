@@ -19,6 +19,34 @@ mysql = MySQL(app)
 app.secret_key = "test-key"
 
 
+# --------------------- Register component page ------------------
+@app.route("/register_component", methods=['GET', 'POST'])
+def register_component():
+    if not 'user' in session:
+        return redirect(url_for('login'))
+
+    return render_template('register_component.html')
+
+
+# ---------------------- Update component page -------------------
+@app.route("/update_component", methods=['GET', 'POST'])
+def update_component():
+    if not 'user' in session:
+        return redirect(url_for('login'))
+
+    return render_template('update_component.html')
+
+
+# --------------------------- Log page ---------------------------
+@app.route("/log", methods=['GET', 'POST'])
+def log():
+    if not 'user' in session:
+        return redirect(url_for('login'))
+
+    return render_template('log.html')
+
+
+# -------------------------- Login page --------------------------
 @app.route("/login", methods=['GET', 'POST'])
 def login():
     if request.method == "POST":
@@ -51,6 +79,8 @@ def login():
     return render_template('login.html')
 
 
+
+# -------------------------- Logout page --------------------------
 @app.route("/logout", methods=['GET', 'POST'])
 def logout():
     session.clear()
@@ -60,20 +90,35 @@ def logout():
 
 
 
+
+# --------------------------- Main page ---------------------------
 @app.route("/", methods=['GET', 'POST'])
 def home():
     if not 'user' in session:
         return redirect(url_for('login'))
 
     cursor = mysql.connection.cursor()
-    cursor.execute(''' SELECT componentName, componentDescription, componentCategory, componentAmount FROM components ''')
-    data = cursor.fetchall()
-    cursor.close()
 
     if request.method == 'POST':
-        selected_value = request.form.get('select')
-        return render_template("index.html", data=data, selected_value=selected_value)
+        selected_sort  = request.form.get('select_sort')
+        selected_value = request.form.get('select_category')
+
+
+        if selected_sort == "select_asc":
+            cursor.execute(''' SELECT componentName, componentDescription, componentCategory, componentAmount FROM components ORDER BY componentAmount ASC''')
+        else:
+            cursor.execute(''' SELECT componentName, componentDescription, componentCategory, componentAmount FROM components ORDER BY componentAmount DESC''')
+            
+        data = cursor.fetchall()
+        cursor.close()
+        
+        return render_template("index.html", data=data, selected_value=selected_value, order_select=selected_sort, selected_cat=selected_value)
+    
     else:
+        cursor.execute(''' SELECT componentName, componentDescription, componentCategory, componentAmount FROM components''')
+        data = cursor.fetchall()
+        cursor.close()
+
         return render_template("index.html", data=data)
         
     

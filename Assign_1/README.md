@@ -10,12 +10,16 @@
     "python.defaultInterpreterPath": "[INSERT YOUR PATH]\\Assign_1\\env\\Scripts\\python.exe"
 }
 ```
+6. In the terminal run
+```
+.\env\Scripts\activate.ps1
+```
 
-Note: This sets up the enviroment and should fix the missing dependencies
+Note: This sets up the enviroment and should fix the missing dependencies (You might have to run Set-ExecutionPolicy Unrestricted)
 
 
 
-6. To run flask app open terminal in vscode and type 
+1. To run flask app open terminal in vscode and type 
 ```
 python app.py
 ```
