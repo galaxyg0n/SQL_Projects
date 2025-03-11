@@ -2,24 +2,21 @@
 ### Guide to setup in vscode
 1. Clone project
 2. Open project folder in vscode
-3. Create .vscode folder
-4. Create settings.json in .vscode folder
-5. Insert the following in the settings.json
+3. Setup a python environment with
 ```
-{
-    "python.defaultInterpreterPath": "[INSERT YOUR PATH]\\Assign_1\\env\\Scripts\\python.exe"
-}
+python -m venv venv
 ```
-6. In the terminal run
+4. Activate the environment
 ```
-.\env\Scripts\activate.ps1
+./venv/Scripts/activate.ps1
 ```
+5. Install the dependencies
+```
+pip install -r requirements.txt
+```
+Note: If you add more dependencies please update requirements.txt accordingly
 
-Note: This sets up the enviroment and should fix the missing dependencies (You might have to run Set-ExecutionPolicy Unrestricted)
-
-
-
-1. To run flask app open terminal in vscode and type 
+6. To run flask app open terminal in vscode and type 
 ```
 python app.py
 ```
