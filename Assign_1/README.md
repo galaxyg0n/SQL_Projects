@@ -15,12 +15,17 @@ python -m venv .venv
 pip install -r requirements.txt
 ```
 Note: If you add more dependencies please update requirements.txt accordingly
+```
+pip freeze > requirements.txt
+```
 
 6. To run flask app open terminal in vscode and type 
 ```
 python app.py
 ```
 Note: Website should now be running on http://localhost:8000/
+ 
+---
 
 ### Writing css
 1. Download "Live Sass Compiler" extension in vscode
