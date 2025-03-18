@@ -180,3 +180,50 @@
     
     }
 }
+
+
+
+.component-form 
+{
+    width: 50%;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+
+    form 
+    {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    input, select 
+    {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        font-size: 16px;
+    }
+    
+    
+    label 
+    {
+        font-weight: bold;
+        margin-top: 10px;
+        color: #333;
+    }
+    
+    br 
+    {
+        display: none;
+    }
+}
+
+.status_message
+{
+    margin-top: 0.5em;
+    color: white;
+}

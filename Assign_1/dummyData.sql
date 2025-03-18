@@ -10,7 +10,7 @@ INSERT INTO components (componentName, componentDescription, componentCategory, 
 ('100nF Capacitor', 'Multilayer Ceramic Capacitors MLCC - Leaded 0.1uF 50volts 10% X7R 5mm LS', 'Capacitor', 300),
 ('ATmega328p', '8-bit Microcontrollers - MCU AVR 32K FLSH 2K SRAM 1KB EE-20 MHZ 105C', 'Microcontroller', 150),
 ('Red LED 5mm', 'SparkFun Accessories LED - Basic Red 5mm', 'LED', 1000),
-('1N4007 Rectifier Diode', 'Rectifiers Diode, DO-41, 1000V, 1A', 'Diode', 400);
+('1N4007 Rectifier Diode', 'Rectifiers Diode, DO-41, 1000V, 1A', 'Diode', 400),
 ('1k Ohm Resistor', 'Carbon Film Resistors - Through Hole 1K Ohm 1/4W 5%', 'Resistor', 600),
 ('22pF Capacitor', 'Ceramic Capacitors 22pF 50V 5% Radial', 'Capacitor', 250),
 ('STM32F103C8T6', '32-bit ARM Cortex-M3 Microcontroller 64KB Flash 20KB SRAM', 'Microcontroller', 120),

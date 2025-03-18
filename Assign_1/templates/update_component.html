@@ -10,6 +10,8 @@
     href="{{ url_for('static', filename='style.css') }}"
     />
 
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+
     <title>Component layer - Update</title>
 </head>
 <body>
@@ -46,8 +48,35 @@
                 </div>
             </nav>
         </div>
+
+        <div class="update-container">
+            <form method="POST">
+                <label for="category_select">Select or enter category</label>
+                <select name="component_selector" class="form-select form-select-lg" id="item_selector">
+                    {% for category in data|map(attribute=0)|unique %}
+                        <option value="{{ category }}">{{ category }}</option>
+                    {% endfor %}
+                </select>
+            </form>
+        </div>
+
     </div>
     
+    <script>
+        $(document).ready(function() {
+            $('#item_selector').change(function() {
+                var selectedItem = $(this).val();
+                
+                $.ajax({
+                    url: '/update_component?comp=' + selectedItem,
+                    method: 'GET',
+                    success: function(response) {
+                        $('#content_area').html('<p>' + response.content + '</p>');
+                    }
+                });
+            });
+        });
+    </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 </body>
 </html>

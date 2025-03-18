@@ -4,7 +4,10 @@ from flask import request
 from flask import session
 from flask import url_for
 from flask import redirect
+from flask import make_response
 from flask_mysqldb import MySQL
+
+from datetime import datetime
 
 app = Flask(__name__)
 
@@ -19,27 +22,213 @@ mysql = MySQL(app)
 app.secret_key = "test-key"
 
 
+# --------------------- SQL functions ------------------
+def fetch_query(row, table):
+    try:
+        cursor = mysql.connection.cursor()
+        cursor.execute(f''' SELECT {row} FROM {table}''')
+        data = cursor.fetchall()
+        cursor.close()
+
+        return data
+
+    except Exception as e:
+        print(f"fetch_query: {e}")
+
+
+def fetch_password(row, table, workerID):
+    try:
+        cursor = mysql.connection.cursor()
+        cursor.execute(f''' SELECT {row} FROM {table} WHERE workerID = {workerID} ''')
+        dbPass = cursor.fetchone()
+        cursor.close()
+
+    except Exception as e:
+        print(f"fetch_password: {e}")
+
+    return dbPass
+
+
+def fetch_home_query(orderBy, method):
+    try:
+        cursor = mysql.connection.cursor()
+
+        if method == 'POST':
+            if orderBy:
+                cursor.execute(f''' SELECT componentName, componentDescription, componentCategory, componentAmount FROM components ORDER BY componentAmount ASC''')
+            else:
+                cursor.execute(f''' SELECT componentName, componentDescription, componentCategory, componentAmount FROM components ORDER BY componentAmount DESC''')
+        
+        else:
+            cursor.execute(''' SELECT componentName, componentDescription, componentCategory, componentAmount FROM components''')
+
+        data = cursor.fetchall()
+        cursor.close()
+        return data
+
+    except Exception as e:
+        print(f"fetch_home_query: {e}")
+
+
+def insert_register_query(componentName, componentDescription, componentCategory, componentAmount):
+    """
+    Description:
+        Function to insert data in the register table \n
+    
+    Args:
+        componentName: Name of the component
+        componentDescription: Description of the component
+        componentCategory: Category of the component (selected from html selector or typed if it didn't excist)
+        componentAmount: Amount of the inserted component
+    
+    Returns:
+        Nothing
+    """
+    try:
+        cursor = mysql.connection.cursor()
+        cursor.execute(''' INSERT INTO components (componentName, componentDescription, componentCategory, componentAmount) VALUES (%s, %s, %s, %s) ''',  (componentName, componentDescription, componentCategory, componentAmount))
+        mysql.connection.commit()
+        cursor.close()
+
+    except Exception as e:
+        print(f"insert_register_query: {e}")
+
+
+def insert_transaction_query(workerID, transactionTime, componentName, transactionAmount):
+    """
+    Description:
+        Function to insert data in the transaction table \n
+    
+    Args:
+        workerID: Worker ID
+        transactionTime: Time of transaction fetched from datetime.now()
+        componentName: Name of component
+        transactionAmount: Amount of the inserted component
+    
+    Returns:
+        Nothing
+    """
+    try:
+        cursor = mysql.connection.cursor()
+        cursor.execute(''' INSERT INTO transactions (workerID, transactionTime, componentName, transactionAmount) VALUES (%s, %s, %s, %s)''', (workerID, transactionTime, componentName, transactionAmount))
+        mysql.connection.commit()
+        cursor.close()
+
+    except Exception as e:
+        print(f"insert_transaction_query: {e}")
+
+
 # --------------------- Register component page ------------------
 @app.route("/register_component", methods=['GET', 'POST'])
 def register_component():
+    """
+    Description:
+        Handler function for register component page \n
+        - Gets all relevant data from the html form and inserts in the database using insert_register_query()
+
+        - Adds transaction "event" to the database using insert_transaction_query()
+    
+        - Gets the time of the transaction automatically using the datetime library
+    
+    Args:
+        HTML methods (GET and POST)
+    
+    Returns:
+        Renders register_component.html
+    """
+
     if not 'user' in session:
         return redirect(url_for('login'))
+    
+    data = fetch_query('componentCategory', 'components')
 
-    return render_template('register_component.html')
+    if request.method == "POST":
+        comp_name   = request.form.get('component_name')
+        comp_desc   = request.form.get('component_description')
+        comp_select = request.form.get('component_selector')
+        comp_cat    = request.form.get('component_category')
+        comp_amount = request.form.get('component_amount')
+
+        try:
+            if comp_select == "none":
+                if comp_cat == "":
+                    status_msg = "No category selected or entered!"
+                    return render_template('register_component.html', status_msg=status_msg)
+                
+                insert_register_query(comp_name, comp_desc, comp_cat, comp_amount)
+
+                workerID = request.cookies.get('userID')
+                now = datetime.now().replace(microsecond=0)
+                insert_transaction_query(workerID, now, comp_name, comp_amount)
+
+                status_msg = "Component has been registered"
+                return render_template('register_component.html', status_msg=status_msg)
+            
+            else:
+                insert_register_query(comp_name, comp_desc, comp_select, comp_amount)
+                
+                workerID = request.cookies.get('userID')
+                now = datetime.now().replace(microsecond=0)
+                insert_transaction_query(workerID, now, comp_name, comp_amount)
+
+                status_msg = "Component has been registered"
+                return render_template('register_component.html', status_msg=status_msg)
+
+        except Exception as e:
+            print(e)
+            status_msg = "Something went wrong!"
+            return render_template('register_component.html', status_msg=status_msg)
+    
+    
+    return render_template('register_component.html', data=data)
 
 
 # ---------------------- Update component page -------------------
 @app.route("/update_component", methods=['GET', 'POST'])
 def update_component():
+    """
+    Description:
+        Handler function for update component page \n
+        - Checks if a category has been selected and updates the page with a GET request using url queries
+        
+        - Updates database table according to the inserted data in the html form
+    
+    Args:
+        HTML methods (GET and POST)
+    
+    Returns:
+        Renders update_component.html
+    """
+
     if not 'user' in session:
         return redirect(url_for('login'))
+    
 
-    return render_template('update_component.html')
+    data = fetch_query('componentCategory', 'components')
+    if request.method == "GET":
+        if request.args.get('comp') != "None":
+            
+
+            print(request.args.get('comp'))
+
+    return render_template('update_component.html', data=data)
 
 
 # --------------------------- Log page ---------------------------
+
 @app.route("/log", methods=['GET', 'POST'])
 def log():
+    """
+    Description:
+        Handler function for log page
+    
+    Args:
+        HTML methods (GET and POST)
+    
+    Returns:
+        Renders log.html
+    """
+        
     if not 'user' in session:
         return redirect(url_for('login'))
 
@@ -47,23 +236,52 @@ def log():
 
 
 # -------------------------- Login page --------------------------
+@app.route('/set_cookie')
+def set_cookie():
+    """
+    Description:
+        Sets userID cookie to the logged in workerID
+    
+    Args:
+        Nothing
+    
+    Returns:
+        make_response response (html status response)
+    """
+    userID = request.args.get('userID')
+    print(userID)
+    resp = make_response(redirect(url_for('home')))  
+    resp.set_cookie('userID', userID, max_age=60*60*24, httponly=False, secure=False, samesite="Lax")  # Expires in 1 day
+    return resp
+
+
 @app.route("/login", methods=['GET', 'POST'])
 def login():
+    """
+    Description:
+        Handler function for the login page \n
+        - Gets the html form data
+        - Fetches password from corresponding workerID in the users database
+        - Checks if the typed password matches the fetched password
+
+    
+    Args:
+        HTML methods (GET and POST)
+    
+    Returns:
+        Renders the login.html page
+    """
     if request.method == "POST":
         workerID = request.form['workerID']
         password = request.form['password']
 
         try:
-            cursor = mysql.connection.cursor()
-            cursor.execute(''' SELECT workerPassword FROM users WHERE workerID = %s ''', (workerID))
-            dbPass = cursor.fetchone()
-
-            print(dbPass)
-
+            dbPass = fetch_password('workerPassword', 'users', workerID)
+            
             if password == dbPass[0]:
                 session['user'] = workerID
                 session.modified = True
-                return redirect(url_for('home'))
+                return redirect(url_for('set_cookie', userID=workerID))
             
             else:
                 err_msg = "Wrong password or Worker ID!"
@@ -72,9 +290,6 @@ def login():
         except Exception as e:
                 err_msg = "Wrong password or Worker ID!"
                 return render_template('login.html', err_msg=err_msg)
-        
-        finally:
-            cursor.close()
 
     return render_template('login.html')
 
@@ -83,6 +298,17 @@ def login():
 # -------------------------- Logout page --------------------------
 @app.route("/logout", methods=['GET', 'POST'])
 def logout():
+    """
+    Description:
+        Handler function for logging out \n
+        - Clears the session
+    
+    Args:
+        HTML methods (GET and POST)
+    
+    Returns:
+        Redirects to home page which will redirect to login automatically
+    """
     session.clear()
     session.modified = True
 
@@ -93,11 +319,22 @@ def logout():
 
 # --------------------------- Main page ---------------------------
 @app.route("/", methods=['GET', 'POST'])
-def home():
+def home():    
+    """
+    Handler function for update component page \n
+    - Checks if a category has been selected and updates the page with a GET request using url queries
+    
+    - Updates database table according to the inserted data in the html form
+    
+    Args:
+        HTML methods (GET and POST)
+    
+    Returns:
+        Renders update_component.html
+    """
+    
     if not 'user' in session:
         return redirect(url_for('login'))
-
-    cursor = mysql.connection.cursor()
 
     if request.method == 'POST':
         selected_sort  = request.form.get('select_sort')
@@ -105,23 +342,18 @@ def home():
 
 
         if selected_sort == "select_asc":
-            cursor.execute(''' SELECT componentName, componentDescription, componentCategory, componentAmount FROM components ORDER BY componentAmount ASC''')
+            data = fetch_home_query(True, 'POST')
         else:
-            cursor.execute(''' SELECT componentName, componentDescription, componentCategory, componentAmount FROM components ORDER BY componentAmount DESC''')
-            
-        data = cursor.fetchall()
-        cursor.close()
+            data = fetch_home_query(False, 'POST')
         
         return render_template("index.html", data=data, selected_value=selected_value, order_select=selected_sort, selected_cat=selected_value)
     
     else:
-        cursor.execute(''' SELECT componentName, componentDescription, componentCategory, componentAmount FROM components''')
-        data = cursor.fetchall()
-        cursor.close()
+        data = fetch_home_query(False, 'GET')
 
         return render_template("index.html", data=data)
         
     
 
 if __name__ == '__main__':
-    app.run(host="localhost", port=8000, debug=True)
+    app.run(host="127.0.0.1", port=8000, debug=True)

@@ -17,5 +17,6 @@ CREATE TABLE transactions (
     transactionsID     INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     workerID           INT,
     transactionTime    DATETIME,
+    componentName      VARCHAR(255),
     transactionAmount  INT
 );
