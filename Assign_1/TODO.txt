@@ -24,15 +24,25 @@ Python app:
             - Look for possible exploits
 
     - Home page
-        - Add redirects to navbar elements
-        - Make function for Order by selector
+        - Add redirects to navbar elements ✅
+        - Make function for Order by selector ✅
+            - Fix: Resetting after 2 clicks
     
     
     - Register component page (Perm 1)
-        - Setup
+        - Setup ✅
+        - Fixes:
+            - 
 
     - Update components       (Perm 1)
-        - Setup
+        - Setup ✅
+        - Fixes:
+            - Selector resets after 2 submit clicks
 
     - Checkout component page (Perm 0)
+        - Setup
+
+    - Log page (Perm 1)
+        - Setup
+
 

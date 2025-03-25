@@ -1,0 +1,66 @@
+.main-container .search-container {
+  margin-top: 2em;
+  display: flex;
+  width: 80%;
+  align-items: center;
+  flex-direction: column;
+}
+.main-container .search-container input {
+  width: 30em;
+  box-sizing: border-box;
+  border: 2px solid #ccc;
+  border-radius: 4px;
+  font-size: 16px;
+  background-color: white;
+  background-position: 10px 10px;
+  background-repeat: no-repeat;
+  padding: 1em 2em 1em 1em;
+}
+.main-container .selectorMenu {
+  display: flex;
+  margin-top: 1em;
+  flex-direction: row;
+  align-items: center;
+  width: 50em;
+}
+.main-container .selectorMenu div {
+  margin: 0.5em;
+}
+.main-container .selectorMenu label {
+  color: #e6e1e3;
+  font-size: large;
+  margin: 0.5em;
+}
+.main-container .selectorMenu form {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+.main-container .selectorMenu button {
+  border: 2px solid #ccc;
+  border-radius: 4px;
+  text-align: center;
+  font-size: 1rem;
+  padding: 0.5em 3em 0.5em 3em;
+}
+
+.searchResult {
+  margin-top: 3em;
+}
+.searchResult .item-container {
+  width: 70em;
+}
+.searchResult .item-container table {
+  font-family: arial, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+.searchResult .item-container td, .searchResult .item-container th {
+  color: #e6e1e3;
+  border: 1px solid #9e9e9e;
+  text-align: left;
+  padding: 8px;
+}
+.searchResult .item-container tr:nth-child(even) {
+  background-color: #1c1b1d;
+}/*# sourceMappingURL=index.css.map */

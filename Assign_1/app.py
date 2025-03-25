@@ -23,10 +23,15 @@ app.secret_key = "test-key"
 
 
 # --------------------- SQL functions ------------------
-def fetch_query(row, table):
+def fetch_query(row, table, where):
     try:
-        cursor = mysql.connection.cursor()
-        cursor.execute(f''' SELECT {row} FROM {table}''')
+        if where != '':
+            cursor = mysql.connection.cursor()
+            cursor.execute(f''' SELECT {row} FROM {table} WHERE {where}''')
+        else:
+            cursor = mysql.connection.cursor()
+            cursor.execute(f''' SELECT {row} FROM {table}''')
+        
         data = cursor.fetchall()
         cursor.close()
 
@@ -140,7 +145,7 @@ def register_component():
     if not 'user' in session:
         return redirect(url_for('login'))
     
-    data = fetch_query('componentCategory', 'components')
+    data = fetch_query('componentCategory', 'components', '')
 
     if request.method == "POST":
         comp_name   = request.form.get('component_name')
@@ -203,13 +208,15 @@ def update_component():
     if not 'user' in session:
         return redirect(url_for('login'))
     
-
-    data = fetch_query('componentCategory', 'components')
     if request.method == "GET":
-        if request.args.get('comp') != "None":
-            
+        print(request.args.get('comp'))
 
-            print(request.args.get('comp'))
+        if request.args.get('comp') != 'None':
+            arg = request.args.get('comp')
+            data = fetch_query('*', 'components', arg)
+            
+        else:
+            data = fetch_query('*', 'components', '')
 
     return render_template('update_component.html', data=data)
 
@@ -231,8 +238,11 @@ def log():
         
     if not 'user' in session:
         return redirect(url_for('login'))
+    
+    data = fetch_query("*", "transactions", '')
+    print(data)
 
-    return render_template('log.html')
+    return render_template('log.html', data=data)
 
 
 # -------------------------- Login page --------------------------
