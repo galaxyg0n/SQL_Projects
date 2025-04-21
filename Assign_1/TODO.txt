@@ -45,4 +45,16 @@ Python app:
     - Log page (Perm 1)
         - Setup
 
+<<<<<<< Updated upstream
+=======
+
+Requirements:
+- Databasen skal designes ved hjælp af en relationel databasemodel, såsom MySQL eller SQLite. ✅ 
+- Der skal være veldefinerede relationer mellem tabellerne, herunder primærnøgler og fremmednøgler. ✅
+- Normalisering skal anvendes for at minimere redundans.
+- Systemet skal understøtte dataintegritet.
+- Der skal udarbejdes og præsenteres et ER-diagram, der illustrerer systemets struktur. 
+- ER-diagrammet skal tydeligt vise relationerne mellem tabellerne samt attributter.
+- Der er bonus for at implementerer at kun medarbjedere med godkendte ID kan udtage komponenter.
+>>>>>>> Stashed changes
 

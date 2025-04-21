@@ -68,7 +68,7 @@
                 <table>
                     <tr>
                         <th>Item name</th>
-                        <th>Description</th>
+                        <th>Package type</th>
                         <th>Category</th>
                         <th>Amount in stock</th>
                     </tr>
@@ -76,9 +76,9 @@
                         {% if item[2] == selected_value %}
                             <tr>
                                 <td>{{ item[0] }}</td>
-                                <td>{{ item[1] }}</td>
-                                <td>{{ item[2] }}</td>
                                 <td>{{ item[3] }}</td>
+                                <td>{{ item[2] }}</td>
+                                <td>{{ item[1] }}</td>
                             </tr>
                         {% endif %}
                     {% endfor %}
