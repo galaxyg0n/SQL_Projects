@@ -1,0 +1,57 @@
+Database:
+    Users:
+        - workerID
+        - workerName
+        - workerPassword
+        - workerPermissions
+
+    Components:
+        - componentID
+        - componentName
+        - componentDescription
+        - componentCategory
+        - componentAmount
+
+    Transactions:
+        - transactionID
+        - workerID
+        - transactionTime
+        - transactionAmount
+
+Python app:
+    - Login page ✅
+        - To fix:
+            - Look for possible exploits
+
+    - Home page
+        - Add redirects to navbar elements ✅
+        - Make function for Order by selector ✅
+            - Fix: Resetting after 2 clicks
+    
+    
+    - Register component page (Perm 1)
+        - Setup ✅
+        - Fixes:
+            - 
+
+    - Update components       (Perm 1)
+        - Setup ✅
+        - Fixes:
+            - Selector resets after 2 submit clicks
+
+    - Checkout component page (Perm 0)
+        - Setup
+
+    - Log page (Perm 1)
+        - Setup
+
+
+Requirements:
+- Databasen skal designes ved hjælp af en relationel databasemodel, såsom MySQL eller SQLite. ✅ 
+- Der skal være veldefinerede relationer mellem tabellerne, herunder primærnøgler og fremmednøgler. ✅
+- Normalisering skal anvendes for at minimere redundans.
+- Systemet skal understøtte dataintegritet.
+- Der skal udarbejdes og præsenteres et ER-diagram, der illustrerer systemets struktur. 
+- ER-diagrammet skal tydeligt vise relationerne mellem tabellerne samt attributter.
+- Der er bonus for at implementerer at kun medarbjedere med godkendte ID kan udtage komponenter.
+

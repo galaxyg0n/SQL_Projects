@@ -1,0 +1,606 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
+<meta name="generator" content="pdoc3 0.11.5">
+<title>app API documentation</title>
+<meta name="description" content="">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/sanitize.min.css" integrity="sha512-y1dtMcuvtTMJc1yPgEqF0ZjQbhnc/bFhyvIyVNb9Zk5mIGtqVaAB1Ttl28su8AvFMOY0EwRbAe+HCLqj6W7/KA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/typography.min.css" integrity="sha512-Y1DYSb995BAfxobCkKepB1BqJJTPrOp3zPL74AWFugHHmmdcvO+C48WLrUOlhGMc0QG7AE3f7gmvvcrmX2fDoA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:1.5em;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:2em 0 .50em 0}h3{font-size:1.4em;margin:1.6em 0 .7em 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .2s ease-in-out}a:visited{color:#503}a:hover{color:#b62}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900;font-weight:bold}pre code{font-size:.8em;line-height:1.4em;padding:1em;display:block}code{background:#f3f3f3;font-family:"DejaVu Sans Mono",monospace;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source > summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible;min-width:max-content}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em 1em;margin:1em 0}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul ul{padding-left:1em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha512-D9gUyxqja7hBtkWpPWGt9wfbfaMGVt9gnyCvYa+jojwwPHLCzUm5i8rpk7vD7wNee9bA35eYIjobYPaQuKS1MQ==" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => {
+hljs.configure({languages: ['bash', 'css', 'diff', 'graphql', 'ini', 'javascript', 'json', 'plaintext', 'python', 'python-repl', 'rust', 'shell', 'sql', 'typescript', 'xml', 'yaml']});
+hljs.highlightAll();
+/* Collapse source docstrings */
+setTimeout(() => {
+[...document.querySelectorAll('.hljs.language-python > .hljs-string')]
+.filter(el => el.innerHTML.length > 200 && ['"""', "'''"].includes(el.innerHTML.substring(0, 3)))
+.forEach(el => {
+let d = document.createElement('details');
+d.classList.add('hljs-string');
+d.innerHTML = '<summary>"""</summary>' + el.innerHTML.substring(3);
+el.replaceWith(d);
+});
+}, 100);
+})</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>app</code></h1>
+</header>
+<section id="section-intro">
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-functions">Functions</h2>
+<dl>
+<dt id="app.fetch_home_query"><code class="name flex">
+<span>def <span class="ident">fetch_home_query</span></span>(<span>orderBy, method)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def fetch_home_query(orderBy, method):
+    try:
+        cursor = mysql.connection.cursor()
+
+        if method == &#39;POST&#39;:
+            if orderBy:
+                cursor.execute(f&#39;&#39;&#39; SELECT componentName, componentDescription, componentCategory, componentAmount FROM components ORDER BY componentAmount ASC&#39;&#39;&#39;)
+            else:
+                cursor.execute(f&#39;&#39;&#39; SELECT componentName, componentDescription, componentCategory, componentAmount FROM components ORDER BY componentAmount DESC&#39;&#39;&#39;)
+        
+        else:
+            cursor.execute(&#39;&#39;&#39; SELECT componentName, componentDescription, componentCategory, componentAmount FROM components&#39;&#39;&#39;)
+
+        data = cursor.fetchall()
+        cursor.close()
+        return data
+
+    except Exception as e:
+        print(f&#34;fetch_home_query: {e}&#34;)</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="app.fetch_password"><code class="name flex">
+<span>def <span class="ident">fetch_password</span></span>(<span>row, table, workerID)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def fetch_password(row, table, workerID):
+    try:
+        cursor = mysql.connection.cursor()
+        cursor.execute(f&#39;&#39;&#39; SELECT {row} FROM {table} WHERE workerID = {workerID} &#39;&#39;&#39;)
+        dbPass = cursor.fetchone()
+        cursor.close()
+
+    except Exception as e:
+        print(f&#34;fetch_password: {e}&#34;)
+
+    return dbPass</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="app.fetch_query"><code class="name flex">
+<span>def <span class="ident">fetch_query</span></span>(<span>row, table)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def fetch_query(row, table):
+    try:
+        cursor = mysql.connection.cursor()
+        cursor.execute(f&#39;&#39;&#39; SELECT {row} FROM {table}&#39;&#39;&#39;)
+        data = cursor.fetchall()
+        cursor.close()
+
+        return data
+
+    except Exception as e:
+        print(f&#34;fetch_query: {e}&#34;)</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="app.home"><code class="name flex">
+<span>def <span class="ident">home</span></span>(<span>)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@app.route(&#34;/&#34;, methods=[&#39;GET&#39;, &#39;POST&#39;])
+def home():    
+    &#34;&#34;&#34;
+    Handler function for update component page \n
+    - Checks if a category has been selected and updates the page with a GET request using url queries
+    
+    - Updates database table according to the inserted data in the html form
+    
+    Args:
+        HTML methods (GET and POST)
+    
+    Returns:
+        Renders update_component.html
+    &#34;&#34;&#34;
+    
+    if not &#39;user&#39; in session:
+        return redirect(url_for(&#39;login&#39;))
+
+    if request.method == &#39;POST&#39;:
+        selected_sort  = request.form.get(&#39;select_sort&#39;)
+        selected_value = request.form.get(&#39;select_category&#39;)
+
+
+        if selected_sort == &#34;select_asc&#34;:
+            data = fetch_home_query(True, &#39;POST&#39;)
+        else:
+            data = fetch_home_query(False, &#39;POST&#39;)
+        
+        return render_template(&#34;index.html&#34;, data=data, selected_value=selected_value, order_select=selected_sort, selected_cat=selected_value)
+    
+    else:
+        data = fetch_home_query(False, &#39;GET&#39;)
+
+        return render_template(&#34;index.html&#34;, data=data)</code></pre>
+</details>
+<div class="desc"><p>Handler function for update component page </p>
+<ul>
+<li>
+<p>Checks if a category has been selected and updates the page with a GET request using url queries</p>
+</li>
+<li>
+<p>Updates database table according to the inserted data in the html form</p>
+</li>
+</ul>
+<h2 id="args">Args</h2>
+<p>HTML methods (GET and POST)</p>
+<h2 id="returns">Returns</h2>
+<p>Renders update_component.html</p></div>
+</dd>
+<dt id="app.insert_register_query"><code class="name flex">
+<span>def <span class="ident">insert_register_query</span></span>(<span>componentName, componentDescription, componentCategory, componentAmount)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def insert_register_query(componentName, componentDescription, componentCategory, componentAmount):
+    &#34;&#34;&#34;
+    Description:
+        Function to insert data in the register table \n
+    
+    Args:
+        componentName: Name of the component
+        componentDescription: Description of the component
+        componentCategory: Category of the component (selected from html selector or typed if it didn&#39;t excist)
+        componentAmount: Amount of the inserted component
+    
+    Returns:
+        Nothing
+    &#34;&#34;&#34;
+    try:
+        cursor = mysql.connection.cursor()
+        cursor.execute(&#39;&#39;&#39; INSERT INTO components (componentName, componentDescription, componentCategory, componentAmount) VALUES (%s, %s, %s, %s) &#39;&#39;&#39;,  (componentName, componentDescription, componentCategory, componentAmount))
+        mysql.connection.commit()
+        cursor.close()
+
+    except Exception as e:
+        print(f&#34;insert_register_query: {e}&#34;)</code></pre>
+</details>
+<div class="desc"><h2 id="description">Description</h2>
+<p>Function to insert data in the register table </p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>componentName</code></strong></dt>
+<dd>Name of the component</dd>
+<dt><strong><code>componentDescription</code></strong></dt>
+<dd>Description of the component</dd>
+<dt><strong><code>componentCategory</code></strong></dt>
+<dd>Category of the component (selected from html selector or typed if it didn't excist)</dd>
+<dt><strong><code>componentAmount</code></strong></dt>
+<dd>Amount of the inserted component</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>Nothing</p></div>
+</dd>
+<dt id="app.insert_transaction_query"><code class="name flex">
+<span>def <span class="ident">insert_transaction_query</span></span>(<span>workerID, transactionTime, componentName, transactionAmount)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def insert_transaction_query(workerID, transactionTime, componentName, transactionAmount):
+    &#34;&#34;&#34;
+    Description:
+        Function to insert data in the transaction table \n
+    
+    Args:
+        workerID: Worker ID
+        transactionTime: Time of transaction fetched from datetime.now()
+        componentName: Name of component
+        transactionAmount: Amount of the inserted component
+    
+    Returns:
+        Nothing
+    &#34;&#34;&#34;
+    try:
+        cursor = mysql.connection.cursor()
+        cursor.execute(&#39;&#39;&#39; INSERT INTO transactions (workerID, transactionTime, componentName, transactionAmount) VALUES (%s, %s, %s, %s)&#39;&#39;&#39;, (workerID, transactionTime, componentName, transactionAmount))
+        mysql.connection.commit()
+        cursor.close()
+
+    except Exception as e:
+        print(f&#34;insert_transaction_query: {e}&#34;)</code></pre>
+</details>
+<div class="desc"><h2 id="description">Description</h2>
+<p>Function to insert data in the transaction table </p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>workerID</code></strong></dt>
+<dd>Worker ID</dd>
+<dt><strong><code>transactionTime</code></strong></dt>
+<dd>Time of transaction fetched from datetime.now()</dd>
+<dt><strong><code>componentName</code></strong></dt>
+<dd>Name of component</dd>
+<dt><strong><code>transactionAmount</code></strong></dt>
+<dd>Amount of the inserted component</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>Nothing</p></div>
+</dd>
+<dt id="app.log"><code class="name flex">
+<span>def <span class="ident">log</span></span>(<span>)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@app.route(&#34;/log&#34;, methods=[&#39;GET&#39;, &#39;POST&#39;])
+def log():
+    &#34;&#34;&#34;
+    Description:
+        Handler function for log page
+    
+    Args:
+        HTML methods (GET and POST)
+    
+    Returns:
+        Renders log.html
+    &#34;&#34;&#34;
+        
+    if not &#39;user&#39; in session:
+        return redirect(url_for(&#39;login&#39;))
+
+    return render_template(&#39;log.html&#39;)</code></pre>
+</details>
+<div class="desc"><h2 id="description">Description</h2>
+<p>Handler function for log page</p>
+<h2 id="args">Args</h2>
+<p>HTML methods (GET and POST)</p>
+<h2 id="returns">Returns</h2>
+<p>Renders log.html</p></div>
+</dd>
+<dt id="app.login"><code class="name flex">
+<span>def <span class="ident">login</span></span>(<span>)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@app.route(&#34;/login&#34;, methods=[&#39;GET&#39;, &#39;POST&#39;])
+def login():
+    &#34;&#34;&#34;
+    Description:
+        Handler function for the login page \n
+        - Gets the html form data
+        - Fetches password from corresponding workerID in the users database
+        - Checks if the typed password matches the fetched password
+
+    
+    Args:
+        HTML methods (GET and POST)
+    
+    Returns:
+        Renders the login.html page
+    &#34;&#34;&#34;
+    if request.method == &#34;POST&#34;:
+        workerID = request.form[&#39;workerID&#39;]
+        password = request.form[&#39;password&#39;]
+
+        try:
+            dbPass = fetch_password(&#39;workerPassword&#39;, &#39;users&#39;, workerID)
+            
+            if password == dbPass[0]:
+                session[&#39;user&#39;] = workerID
+                session.modified = True
+                return redirect(url_for(&#39;set_cookie&#39;, userID=workerID))
+            
+            else:
+                err_msg = &#34;Wrong password or Worker ID!&#34;
+                return render_template(&#39;login.html&#39;, err_msg=err_msg)
+            
+        except Exception as e:
+                err_msg = &#34;Wrong password or Worker ID!&#34;
+                return render_template(&#39;login.html&#39;, err_msg=err_msg)
+
+    return render_template(&#39;login.html&#39;)</code></pre>
+</details>
+<div class="desc"><h2 id="description">Description</h2>
+<p>Handler function for the login page </p>
+<ul>
+<li>Gets the html form data</li>
+<li>Fetches password from corresponding workerID in the users database</li>
+<li>Checks if the typed password matches the fetched password</li>
+</ul>
+<h2 id="args">Args</h2>
+<p>HTML methods (GET and POST)</p>
+<h2 id="returns">Returns</h2>
+<p>Renders the login.html page</p></div>
+</dd>
+<dt id="app.logout"><code class="name flex">
+<span>def <span class="ident">logout</span></span>(<span>)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@app.route(&#34;/logout&#34;, methods=[&#39;GET&#39;, &#39;POST&#39;])
+def logout():
+    &#34;&#34;&#34;
+    Description:
+        Handler function for logging out \n
+        - Clears the session
+    
+    Args:
+        HTML methods (GET and POST)
+    
+    Returns:
+        Redirects to home page which will redirect to login automatically
+    &#34;&#34;&#34;
+    session.clear()
+    session.modified = True
+
+    return redirect(url_for(&#39;home&#39;))</code></pre>
+</details>
+<div class="desc"><h2 id="description">Description</h2>
+<p>Handler function for logging out </p>
+<ul>
+<li>Clears the session</li>
+</ul>
+<h2 id="args">Args</h2>
+<p>HTML methods (GET and POST)</p>
+<h2 id="returns">Returns</h2>
+<p>Redirects to home page which will redirect to login automatically</p></div>
+</dd>
+<dt id="app.register_component"><code class="name flex">
+<span>def <span class="ident">register_component</span></span>(<span>)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@app.route(&#34;/register_component&#34;, methods=[&#39;GET&#39;, &#39;POST&#39;])
+def register_component():
+    &#34;&#34;&#34;
+    Description:
+        Handler function for register component page \n
+        - Gets all relevant data from the html form and inserts in the database using insert_register_query()
+
+        - Adds transaction &#34;event&#34; to the database using insert_transaction_query()
+    
+        - Gets the time of the transaction automatically using the datetime library
+    
+    Args:
+        HTML methods (GET and POST)
+    
+    Returns:
+        Renders register_component.html
+    &#34;&#34;&#34;
+
+    if not &#39;user&#39; in session:
+        return redirect(url_for(&#39;login&#39;))
+    
+    data = fetch_query(&#39;componentCategory&#39;, &#39;components&#39;)
+
+    if request.method == &#34;POST&#34;:
+        comp_name   = request.form.get(&#39;component_name&#39;)
+        comp_desc   = request.form.get(&#39;component_description&#39;)
+        comp_select = request.form.get(&#39;component_selector&#39;)
+        comp_cat    = request.form.get(&#39;component_category&#39;)
+        comp_amount = request.form.get(&#39;component_amount&#39;)
+
+        try:
+            if comp_select == &#34;none&#34;:
+                if comp_cat == &#34;&#34;:
+                    status_msg = &#34;No category selected or entered!&#34;
+                    return render_template(&#39;register_component.html&#39;, status_msg=status_msg)
+                
+                insert_register_query(comp_name, comp_desc, comp_cat, comp_amount)
+
+                workerID = request.cookies.get(&#39;userID&#39;)
+                now = datetime.now().replace(microsecond=0)
+                insert_transaction_query(workerID, now, comp_name, comp_amount)
+
+                status_msg = &#34;Component has been registered&#34;
+                return render_template(&#39;register_component.html&#39;, status_msg=status_msg)
+            
+            else:
+                insert_register_query(comp_name, comp_desc, comp_select, comp_amount)
+                
+                workerID = request.cookies.get(&#39;userID&#39;)
+                now = datetime.now().replace(microsecond=0)
+                insert_transaction_query(workerID, now, comp_name, comp_amount)
+
+                status_msg = &#34;Component has been registered&#34;
+                return render_template(&#39;register_component.html&#39;, status_msg=status_msg)
+
+        except Exception as e:
+            print(e)
+            status_msg = &#34;Something went wrong!&#34;
+            return render_template(&#39;register_component.html&#39;, status_msg=status_msg)
+    
+    
+    return render_template(&#39;register_component.html&#39;, data=data)</code></pre>
+</details>
+<div class="desc"><h2 id="description">Description</h2>
+<p>Handler function for register component page </p>
+<ul>
+<li>
+<p>Gets all relevant data from the html form and inserts in the database using insert_register_query()</p>
+</li>
+<li>
+<p>Adds transaction "event" to the database using insert_transaction_query()</p>
+</li>
+<li>
+<p>Gets the time of the transaction automatically using the datetime library</p>
+</li>
+</ul>
+<h2 id="args">Args</h2>
+<p>HTML methods (GET and POST)</p>
+<h2 id="returns">Returns</h2>
+<p>Renders register_component.html</p></div>
+</dd>
+<dt id="app.set_cookie"><code class="name flex">
+<span>def <span class="ident">set_cookie</span></span>(<span>)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@app.route(&#39;/set_cookie&#39;)
+def set_cookie():
+    &#34;&#34;&#34;
+    Description:
+        Sets userID cookie to the logged in workerID
+    
+    Args:
+        Nothing
+    
+    Returns:
+        make_response response (html status response)
+    &#34;&#34;&#34;
+    userID = request.args.get(&#39;userID&#39;)
+    print(userID)
+    resp = make_response(redirect(url_for(&#39;home&#39;)))  
+    resp.set_cookie(&#39;userID&#39;, userID, max_age=60*60*24, httponly=False, secure=False, samesite=&#34;Lax&#34;)  # Expires in 1 day
+    return resp</code></pre>
+</details>
+<div class="desc"><h2 id="description">Description</h2>
+<p>Sets userID cookie to the logged in workerID</p>
+<h2 id="args">Args</h2>
+<p>Nothing</p>
+<h2 id="returns">Returns</h2>
+<p>make_response response (html status response)</p></div>
+</dd>
+<dt id="app.update_component"><code class="name flex">
+<span>def <span class="ident">update_component</span></span>(<span>)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@app.route(&#34;/update_component&#34;, methods=[&#39;GET&#39;, &#39;POST&#39;])
+def update_component():
+    &#34;&#34;&#34;
+    Description:
+        Handler function for update component page \n
+        - Checks if a category has been selected and updates the page with a GET request using url queries
+        
+        - Updates database table according to the inserted data in the html form
+    
+    Args:
+        HTML methods (GET and POST)
+    
+    Returns:
+        Renders update_component.html
+    &#34;&#34;&#34;
+
+    if not &#39;user&#39; in session:
+        return redirect(url_for(&#39;login&#39;))
+    
+
+    data = fetch_query(&#39;componentCategory&#39;, &#39;components&#39;)
+    if request.method == &#34;GET&#34;:
+        if request.args.get(&#39;comp&#39;) != &#34;None&#34;:
+            
+
+            print(request.args.get(&#39;comp&#39;))
+
+    return render_template(&#39;update_component.html&#39;, data=data)</code></pre>
+</details>
+<div class="desc"><h2 id="description">Description</h2>
+<p>Handler function for update component page </p>
+<ul>
+<li>
+<p>Checks if a category has been selected and updates the page with a GET request using url queries</p>
+</li>
+<li>
+<p>Updates database table according to the inserted data in the html form</p>
+</li>
+</ul>
+<h2 id="args">Args</h2>
+<p>HTML methods (GET and POST)</p>
+<h2 id="returns">Returns</h2>
+<p>Renders update_component.html</p></div>
+</dd>
+</dl>
+</section>
+<section>
+</section>
+</article>
+<nav id="sidebar">
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3><a href="#header-functions">Functions</a></h3>
+<ul class="">
+<li><code><a title="app.fetch_home_query" href="#app.fetch_home_query">fetch_home_query</a></code></li>
+<li><code><a title="app.fetch_password" href="#app.fetch_password">fetch_password</a></code></li>
+<li><code><a title="app.fetch_query" href="#app.fetch_query">fetch_query</a></code></li>
+<li><code><a title="app.home" href="#app.home">home</a></code></li>
+<li><code><a title="app.insert_register_query" href="#app.insert_register_query">insert_register_query</a></code></li>
+<li><code><a title="app.insert_transaction_query" href="#app.insert_transaction_query">insert_transaction_query</a></code></li>
+<li><code><a title="app.log" href="#app.log">log</a></code></li>
+<li><code><a title="app.login" href="#app.login">login</a></code></li>
+<li><code><a title="app.logout" href="#app.logout">logout</a></code></li>
+<li><code><a title="app.register_component" href="#app.register_component">register_component</a></code></li>
+<li><code><a title="app.set_cookie" href="#app.set_cookie">set_cookie</a></code></li>
+<li><code><a title="app.update_component" href="#app.update_component">update_component</a></code></li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.11.5</a>.</p>
+</footer>
+</body>
+</html>

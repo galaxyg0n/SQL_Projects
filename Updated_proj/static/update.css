@@ -1,0 +1,23 @@
+.update-container label {
+  margin: 0.5em 0.5em;
+  color: #ccc;
+}
+
+.item-container {
+  margin-top: 3em;
+  width: 70em;
+}
+.item-container table {
+  font-family: arial, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+.item-container td, .item-container th {
+  color: #e6e1e3;
+  border: 1px solid #9e9e9e;
+  text-align: left;
+  padding: 8px;
+}
+.item-container tr:nth-child(even) {
+  background-color: #1c1b1d;
+}/*# sourceMappingURL=update.css.map */

@@ -1,0 +1,90 @@
+.navbar-container 
+{
+    min-width: 100%;
+
+    .navbar
+    {
+        padding: 1em; //top right bottom left
+    }
+}
+
+
+.main-container
+{
+    background-color: #141314;
+    min-height: 100vh;
+    
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    .title-container 
+    {
+        color: #e6e1e3;
+        margin-top: 2em;
+
+        width: 80%;
+        text-align: center;
+
+    }
+}
+
+
+
+.login-container
+{
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+
+    background-color: #141314;
+    min-height: 100vh;
+
+    h3
+    {
+        margin-top: 0.5em;
+        color: white;
+    }
+    .form-container
+    {
+        margin-top: 15em;
+
+        input
+        {
+            width: 30em;
+            box-sizing: border-box;
+            border: 2px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
+            background-color: white;
+            background-position: 10px 10px; 
+            background-repeat: no-repeat;
+            
+            padding: 1em 2em 1em 1em; //top right bottom left
+            
+            margin-top: 1em;
+        }
+
+        button
+        {
+            width: 30em;
+            box-sizing: border-box;
+            border: 2px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
+            background-color: white;
+            background-position: 10px 10px; 
+            background-repeat: no-repeat;
+            
+            padding: 1em 2em 1em 1em; //top right bottom left
+            margin-top: 1em;
+        }
+    
+    }
+}
+
+.status_message
+{
+    margin-top: 0.5em;
+    color: white;
+}
