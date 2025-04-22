@@ -338,9 +338,9 @@ def update_component():
             arg = str(request.args.get('comp'))
             data = fetch_update_query(1, arg)
 
-            selectorData = fetch_query('componentCategory', 'categories', '', '')
+            selectorData = fetch_component_categories()
         else:
-            selectorData = fetch_query('componentCategory', 'categories', '', '')
+            selectorData = fetch_component_categories()
             data.append("No_print")
         
     if request.method == "POST":
@@ -360,9 +360,9 @@ def update_component():
             arg = str(request.args.get('comp'))
             data = fetch_update_query(1, arg)
 
-            selectorData = fetch_query('componentCategory', 'categories', '', '')
+            selectorData = fetch_component_categories()
         else:
-            selectorData = fetch_query('componentCategory', 'categories', '', '')
+            selectorData = fetch_component_categories()
             data.append("No_print")
 
 

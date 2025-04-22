@@ -36,7 +36,7 @@
                 <label for="category_select">Select or enter category</label>
                 <select name="component_selector" class="form-select form-select-lg" id="item_selector">
                     <option value="none" selected>None</option>
-                    {% for category in selectorData|map(attribute=0)|unique %}
+                    {% for category in selectorData %}
                         {% if category == arg %}
                             <option value="{{ category }}" selected>{{ category }}</option>
                         {% else %}
