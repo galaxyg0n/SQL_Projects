@@ -32,9 +32,9 @@
                 <div class="category-container">
                     <label for="category_select">Category</label>
                     <select name="select_category" class="form-select form-select-lg">
-                        {% for category in data|map(attribute=2)|unique %}
+                        {% for category in categories %}
                             {% if category == selected_cat%}
-                                <option value="{{ category }} " selected>{{ category  }}</option>
+                                <option value="{{ category }}" selected>{{ category  }}</option>
                             {% else %}
                                 <option value="{{ category }}">{{ category  }}</option>
                             {% endif %}
@@ -72,15 +72,13 @@
                         <th>Category</th>
                         <th>Amount in stock</th>
                     </tr>
-                    {% for item in data %}
-                        {% if item[2] == selected_value %}
+                    {% for item in data %}                       
                             <tr>
                                 <td>{{ item[0] }}</td>
                                 <td>{{ item[3] }}</td>
                                 <td>{{ item[2] }}</td>
                                 <td>{{ item[1] }}</td>
-                            </tr>
-                        {% endif %}
+                            </tr>                       
                     {% endfor %}
                 </table>
             </div>

@@ -23,29 +23,6 @@ app.secret_key = "test-key"
 
 
 # --------------------- SQL functions ------------------
-def fetch_query(row, table, whereCat, where):
-    try:
-        if where != '':
-            cursor = mysql.connection.cursor()
-            cursor.execute(f''' SELECT {row} FROM {table} WHERE {whereCat} = "{where}"''')
-        else:
-            cursor = mysql.connection.cursor()
-            cursor.execute(f''' SELECT {row} FROM {table}''')
-        
-        data = cursor.fetchall()
-
-        returnData = []
-        for item in data:
-            returnData.append(item)
-
-        cursor.close()
-
-        return returnData
-
-    except Exception as e:
-        print(f"fetch_query: {e}")
-
-
 def fetch_update_query(cat_sel):
     try:
         if cat_sel == 1:
@@ -55,7 +32,8 @@ def fetch_update_query(cat_sel):
     except Exception as e:
         print(f"fetch_update_query: {e}")
 
-def fetch_register_query():
+#Gets component categories for dropdown menu
+def fetch_register_query(): 
     try:
         cursor = mysql.connection.cursor()
 
@@ -68,7 +46,7 @@ def fetch_register_query():
 
         returnData = []
         for item in data:
-            returnData.append(item)
+            returnData.append(item[0])
 
         cursor.close()
         return returnData
@@ -76,14 +54,34 @@ def fetch_register_query():
     except Exception as e:
         print(f"fetch_query: {e}")
 
+def fetch_component_categories(): 
+    try:
+        cursor = mysql.connection.cursor()
 
+        query = """
+            SELECT DISTINCT componentCategory FROM categories
+        """        
+        cursor.execute(query)
 
-def fetch_home_query(orderBy, method):
+        data = cursor.fetchall()
+
+        returnData = []
+        for item in data:
+            returnData.append(item[0])
+
+        cursor.close()
+        return returnData
+
+    except Exception as e:
+        print(f"fetch_query: {e}")
+
+def fetch_home_query(orderBy, method, category):
     try:
         cursor = mysql.connection.cursor()
 
         if method == 'POST':
             if orderBy:
+
                 query = """
                     SELECT 
                         c.componentName, 
@@ -93,9 +91,10 @@ def fetch_home_query(orderBy, method):
                     FROM components c
                     JOIN categories cat ON c.categoryID = cat.categoryID
                     JOIN packages p ON c.packageID = p.packageID
+                    WHERE cat.componentCategory = %s OR %s = "ALL"
                     ORDER BY c.componentAmount ASC
                 """
-                cursor.execute(query)
+                cursor.execute(query,(category,category,))
 
             else:
                 query = """
@@ -107,9 +106,10 @@ def fetch_home_query(orderBy, method):
                     FROM components c
                     JOIN categories cat ON c.categoryID = cat.categoryID
                     JOIN packages p ON c.packageID = p.packageID
+                    WHERE cat.componentCategory = %s OR %s = "ALL"
                     ORDER BY c.componentAmount DESC
                 """
-                cursor.execute(query)
+                cursor.execute(query,(category,category,))
         
         else:
             query = """
@@ -239,10 +239,22 @@ def log():
     if not 'user' in session:
         return redirect(url_for('login'))
     
-    data = fetch_query("*", "transactions", '', '')
-    print(data)
+    cursor = mysql.connection.cursor()
 
-    return render_template('log.html', data=data)
+    query = """
+            SELECT * FROM transactions
+        """        
+    cursor.execute(query)
+
+    data = cursor.fetchall()
+
+    returnData = []
+    for item in data:
+        returnData.append(item)
+    print(returnData)
+    cursor.close()
+        
+    return render_template('log.html', data=returnData)
 
 
 
@@ -268,7 +280,6 @@ def update_component():
     
     data = []
     if request.method == "GET":
-
 
         if str(request.args.get('comp')) != 'None':
             arg = str(request.args.get('comp'))
@@ -365,7 +376,8 @@ def home():
     Returns:
         Renders update_component.html
     """
-    
+    categories = fetch_component_categories()
+    categories.insert(0,"All")
     if not 'user' in session:
         return redirect(url_for('login'))
 
@@ -373,17 +385,16 @@ def home():
         selected_sort  = request.form.get('select_sort')
         selected_value = request.form.get('select_category')
 
-
         if selected_sort == "select_asc":
-            data = fetch_home_query(True, 'POST')
+            data = fetch_home_query(True, 'POST', selected_value)
         else:
-            data = fetch_home_query(False, 'POST')
+            data = fetch_home_query(False, 'POST', selected_value)
         
-        return render_template("index.html", data=data, selected_value=selected_value, order_select=selected_sort, selected_cat=selected_value)
+        return render_template("index.html", data=data, categories=categories, selected_value=selected_value, order_select=selected_sort, selected_cat=selected_value)
     
     else:
-        data = fetch_home_query(False, 'GET')
-        return render_template("index.html", data=data)
+        data = fetch_home_query(True, 'GET', "ALL")
+        return render_template("index.html", data=data, categories=categories, selected_value="All",order_select="select_asc",selected_cat="All")
         
     
 
