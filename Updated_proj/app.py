@@ -46,14 +46,36 @@ def fetch_query(row, table, whereCat, where):
         print(f"fetch_query: {e}")
 
 
-def fetch_update_query(cat_sel):
+
+def fetch_update_query(cat_sel, selectedCategory):
     try:
         if cat_sel == 1:
             cursor = mysql.connection.cursor()
-            cursor.execute(''' SELECT * FROM components WHERE  ''')
+            #cursor.execute(f''' SELECT categoryID FROM categories WHERE componentCategory = "{selectedCategory}" ''')
+            #categoryID = cursor.fetchone()
+            
+            query = """
+                SELECT 
+                    c.componentID,
+                    c.componentName, 
+                    c.componentAmount, 
+                    cat.componentCategory,
+                    p.componentPackage
+                FROM components c
+                JOIN categories cat ON c.categoryID = cat.categoryID
+                JOIN packages p ON c.packageID = p.packageID
+            """
+            cursor.execute(query)
 
+        data = cursor.fetchall()
+        cursor.close()
+        return data
+
+
+        
     except Exception as e:
         print(f"fetch_update_query: {e}")
+
 
 def fetch_register_query():
     try:
@@ -166,7 +188,6 @@ def insert_register_query(componentName, componentPackage, componentCategory, co
         # Get category ID or create new category
         cursor.execute('''SELECT categoryID FROM categories WHERE componentCategory = %s''', (componentCategory,))
         category_result = cursor.fetchone()
-        print(f"Category result: {category_result[0]}")
 
         if category_result:
             categoryID = category_result[0]
@@ -178,7 +199,6 @@ def insert_register_query(componentName, componentPackage, componentCategory, co
         # Get package ID or create new package type
         cursor.execute('''SELECT packageID FROM packages WHERE componentPackage = %s''', (componentPackage,))
         package_result = cursor.fetchone()
-        print(f"Package result: {package_result[0]}")
 
         if package_result:
             packageID = package_result[0]
@@ -196,7 +216,7 @@ def insert_register_query(componentName, componentPackage, componentCategory, co
         print(f"insert_register_query: {e}")
 
 
-def insert_transaction_query(workerID, transactionTime, componentName, transactionAmount):
+def insert_transaction_query(workerID, transactionTime, compID, transactionAmount):
     """
     Description:
         Function to insert data in the transaction table \n
@@ -212,7 +232,8 @@ def insert_transaction_query(workerID, transactionTime, componentName, transacti
     """
     try:
         cursor = mysql.connection.cursor()
-        cursor.execute(''' INSERT INTO transactions (workerID, transactionTime, componentName, transactionAmount) VALUES (%s, %s, %s, %s)''', (workerID, transactionTime, componentName, transactionAmount))
+
+        cursor.execute(''' INSERT INTO transactions (workerID, transactionTime, componentID, transactionAmount) VALUES (%s, %s, %s, %s)''', (workerID, transactionTime, compID, transactionAmount))
         mysql.connection.commit()
         cursor.close()
 
@@ -220,6 +241,32 @@ def insert_transaction_query(workerID, transactionTime, componentName, transacti
         print(f"insert_transaction_query: {e}")
 
 
+def update_database(comp_id, comp_name, comp_pack, comp_select, comp_amount):
+    try:
+        cursor = mysql.connection.cursor()
+
+        cursor.execute('''SELECT packageID FROM packages WHERE componentPackage = %s''', (comp_pack,))
+        package_result = cursor.fetchone()
+
+        packID = package_result[0]
+
+        cursor.execute('''SELECT categoryID FROM categories WHERE componentCategory = %s''', (comp_select,))
+        category_result = cursor.fetchone()
+
+        catID = category_result[0]
+
+        query = f"""
+            UPDATE components
+            SET componentName = '{comp_name}', componentAmount = {comp_amount}, packageID = {packID}, categoryID = {catID}
+            WHERE componentID = {comp_id};
+        """
+
+        cursor.execute(query)
+        mysql.connection.commit()
+        cursor.close()
+
+    except Exception as e:
+        print(f"update_database: {e}")
 
 # --------------------------- Log page ---------------------------
 
@@ -240,7 +287,6 @@ def log():
         return redirect(url_for('login'))
     
     data = fetch_query("*", "transactions", '', '')
-    print(data)
 
     return render_template('log.html', data=data)
 
@@ -266,21 +312,42 @@ def update_component():
     if not 'user' in session:
         return redirect(url_for('login'))
     
+    arg = ""
     data = []
     if request.method == "GET":
+        if str(request.args.get('comp')) != 'None':
+            arg = str(request.args.get('comp'))
+            data = fetch_update_query(1, arg)
 
+            selectorData = fetch_query('componentCategory', 'categories', '', '')
+        else:
+            selectorData = fetch_query('componentCategory', 'categories', '', '')
+            data.append("No_print")
+        
+    if request.method == "POST":
+        comp_id     = str(request.form.get('comp_id'))
+        comp_name   = str(request.form.get('component_name'))
+        comp_pack   = str(request.form.get('component_package'))
+        comp_select = str(request.form.get('component_selector'))
+        comp_amount = str(request.form.get('component_amount'))
+
+        update_database(comp_id, comp_name, comp_pack, comp_select, comp_amount)
+
+        workerID = request.cookies.get('userID')
+        now = datetime.now().replace(microsecond=0)
+        insert_transaction_query(workerID, now, comp_id, comp_amount)
 
         if str(request.args.get('comp')) != 'None':
             arg = str(request.args.get('comp'))
             data = fetch_update_query(1, arg)
 
-            selectorData = fetch_query('*', 'components', '', '')
-            
+            selectorData = fetch_query('componentCategory', 'categories', '', '')
         else:
-            selectorData = fetch_query('*', 'components', '', '')
+            selectorData = fetch_query('componentCategory', 'categories', '', '')
             data.append("No_print")
 
-    return render_template('update_component.html', data=data, selectorData=selectorData)
+
+    return render_template('update_component.html', data=data, selectorData=selectorData, arg=arg)
 
 
 
