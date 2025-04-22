@@ -23,12 +23,32 @@ app.secret_key = "test-key"
 
 
 # --------------------- SQL functions ------------------
-def fetch_update_query(cat_sel):
+def fetch_query(row, table, whereCat, where):
+    try:
+        if where != '':
+            cursor = mysql.connection.cursor()
+            cursor.execute(f''' SELECT {row} FROM {table} WHERE {whereCat} = "{where}"''')
+        else:
+            cursor = mysql.connection.cursor()
+            cursor.execute(f''' SELECT {row} FROM {table}''')
+        
+        data = cursor.fetchall()
+
+        returnData = []
+        for item in data:
+            returnData.append(item)
+
+        cursor.close()
+
+        return returnData
+
+    except Exception as e:
+        print(f"fetch_query: {e}")
+
+def fetch_update_query(cat_sel, selectedCategory):
     try:
         if cat_sel == 1:
             cursor = mysql.connection.cursor()
-            #cursor.execute(f''' SELECT categoryID FROM categories WHERE componentCategory = "{selectedCategory}" ''')
-            #categoryID = cursor.fetchone()
             
             query = """
                 SELECT 
