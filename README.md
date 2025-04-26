@@ -21,6 +21,7 @@ This is done by using a database interface of your choice (MySQL Workbench, XAMP
 python app.py
 ``` 
 The website should now be live on http://localhost:8000/
+
 Feel free to contact the authors in case of confussion or errors :)
 
 ---
