@@ -188,19 +188,6 @@ def fetch_password(row, table, workerID):
 
 
 def insert_register_query(componentName, componentPackage, componentCategory, componentAmount):
-    """
-    Description:
-        Function to insert data in the register table \n
-    
-    Args:
-        componentName: Name of the component
-        componentDescription: Description of the component
-        componentCategory: Category of the component (selected from html selector or typed if it didn't excist)
-        componentAmount: Amount of the inserted component
-    
-    Returns:
-        Nothing
-    """
     try:
         cursor = mysql.connection.cursor()
         succesFlag = False
@@ -243,24 +230,11 @@ def insert_register_query(componentName, componentPackage, componentCategory, co
         print(f"insert_register_query: {e}")
 
 
-def insert_transaction_query(workerID, transactionTime, compID, transactionAmount):
-    """
-    Description:
-        Function to insert data in the transaction table \n
-    
-    Args:
-        workerID: Worker ID
-        transactionTime: Time of transaction fetched from datetime.now()
-        componentName: Name of component
-        transactionAmount: Amount of the inserted component
-    
-    Returns:
-        Nothing
-    """
+def insert_transaction_query(workerID, comp_name, transactionAmount):
     try:
         cursor = mysql.connection.cursor()
-
-        cursor.execute(''' INSERT INTO transactions (workerID, transactionTime, componentID, transactionAmount) VALUES (%s, %s, %s, %s)''', (workerID, transactionTime, compID, transactionAmount))
+        transactionTime = datetime.now().replace(microsecond=0)
+        cursor.execute(''' INSERT INTO transactions (workerID, transactionTime, componentName, transactionAmount) VALUES (%s, %s, %s, %s)''', (workerID, transactionTime, comp_name, transactionAmount))
         mysql.connection.commit()
         cursor.close()
 
@@ -298,18 +272,7 @@ def update_database(comp_id, comp_name, comp_pack, comp_select, comp_amount):
 # --------------------------- Log page ---------------------------
 
 @app.route("/log", methods=['GET', 'POST'])
-def log():
-    """
-    Description:
-        Handler function for log page
-    
-    Args:
-        HTML methods (GET and POST)
-    
-    Returns:
-        Renders log.html
-    """
-        
+def log():   
     if not 'user' in session:
         return redirect(url_for('login'))
     
@@ -322,20 +285,6 @@ def log():
 # ---------------------- Update component page -------------------
 @app.route("/update_component", methods=['GET', 'POST'])
 def update_component():
-    """
-    Description:
-        Handler function for update component page \n
-        - Checks if a category has been selected and updates the page with a GET request using url queries
-        
-        - Updates database table according to the inserted data in the html form
-    
-    Args:
-        HTML methods (GET and POST)
-    
-    Returns:
-        Renders update_component.html
-    """
-
     if not 'user' in session:
         return redirect(url_for('login'))
     
@@ -361,8 +310,7 @@ def update_component():
         update_database(comp_id, comp_name, comp_pack, comp_select, comp_amount)
 
         workerID = request.cookies.get('userID')
-        now = datetime.now().replace(microsecond=0)
-        insert_transaction_query(workerID, now, comp_id, comp_amount)
+        insert_transaction_query(workerID, comp_name, comp_amount)
 
         if str(request.args.get('comp')) != 'None':
             arg = str(request.args.get('comp'))
@@ -381,22 +329,6 @@ def update_component():
 # --------------------- Register component page ------------------
 @app.route("/register_component", methods=['GET', 'POST'])
 def register_component():
-    """
-    Description:
-        Handler function for register component page \n
-        - Gets all relevant data from the html form and inserts in the database using insert_register_query()
-
-        - Adds transaction "event" to the database using insert_transaction_query()
-    
-        - Gets the time of the transaction automatically using the datetime library
-    
-    Args:
-        HTML methods (GET and POST)
-    
-    Returns:
-        Renders register_component.html
-    """
-
     if not 'user' in session:
         return redirect(url_for('login'))
     
@@ -420,8 +352,7 @@ def register_component():
                     return render_template('register_component.html', status_msg=status_msg)
 
                 workerID = request.cookies.get('userID')
-                now = datetime.now().replace(microsecond=0)
-                insert_transaction_query(workerID, now, comp_name, comp_amount)
+                insert_transaction_query(workerID, comp_name, comp_amount)
 
                 status_msg = "Component has been registered"
                 return render_template('register_component.html', status_msg=status_msg)
@@ -432,8 +363,7 @@ def register_component():
                     return render_template('register_component.html', status_msg=status_msg)
                 
                 workerID = request.cookies.get('userID')
-                now = datetime.now().replace(microsecond=0)
-                insert_transaction_query(workerID, now, comp_name, comp_amount)
+                insert_transaction_query(workerID, comp_name, comp_amount)
 
                 status_msg = "Component has been registered"
                 return render_template('register_component.html', status_msg=status_msg)
@@ -451,20 +381,9 @@ def register_component():
 # --------------------------- Main page ---------------------------
 @app.route("/", methods=['GET', 'POST'])
 def home():    
-    """
-    Handler function for update component page \n
-    - Checks if a category has been selected and updates the page with a GET request using url queries
-    
-    - Updates database table according to the inserted data in the html form
-    
-    Args:
-        HTML methods (GET and POST)
-    
-    Returns:
-        Renders update_component.html
-    """
     categories = fetch_component_categories()
     categories.insert(0,"All")
+
     if not 'user' in session:
         return redirect(url_for('login'))
 
@@ -488,18 +407,7 @@ def home():
 # -------------------------- Login page --------------------------
 @app.route('/set_cookie')
 def set_cookie():
-    """
-    Description:
-        Sets userID cookie to the logged in workerID
-    
-    Args:
-        Nothing
-    
-    Returns:
-        make_response response (html status response)
-    """
     userID = request.args.get('userID')
-    print(userID)
     resp = make_response(redirect(url_for('home')))  
     resp.set_cookie('userID', userID, max_age=60*60*24, httponly=False, secure=False, samesite="Lax")  # Expires in 1 day
     return resp
@@ -507,20 +415,6 @@ def set_cookie():
 
 @app.route("/login", methods=['GET', 'POST'])
 def login():
-    """
-    Description:
-        Handler function for the login page \n
-        - Gets the html form data
-        - Fetches password from corresponding workerID in the users database
-        - Checks if the typed password matches the fetched password
-
-    
-    Args:
-        HTML methods (GET and POST)
-    
-    Returns:
-        Renders the login.html page
-    """
     if request.method == "POST":
         workerID = request.form['workerID']
         password = request.form['password']
@@ -548,17 +442,6 @@ def login():
 # -------------------------- Logout page --------------------------
 @app.route("/logout", methods=['GET', 'POST'])
 def logout():
-    """
-    Description:
-        Handler function for logging out \n
-        - Clears the session
-    
-    Args:
-        HTML methods (GET and POST)
-    
-    Returns:
-        Redirects to home page which will redirect to login automatically
-    """
     session.clear()
     session.modified = True
 
