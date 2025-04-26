@@ -39,7 +39,7 @@
                 <label for="category_select">Select or enter category</label>
                 <select name="component_selector" class="form-select form-select-lg">
                     <option value="none" selected>None</option>
-                    {% for category in data|map(attribute=0)|unique %}
+                    {% for category in data %}
                         <option value="{{ category }}">{{ category }}</option>
                     {% endfor %}
                 </select>

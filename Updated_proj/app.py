@@ -131,7 +131,7 @@ def fetch_home_query(orderBy, method, category):
                         p.componentPackage
                     FROM components c
                     JOIN categories cat ON c.categoryID = cat.categoryID
-                    JOIN packages p ON c.packageID = p.packageID
+                    LEFT JOIN packages p ON c.packageID = p.packageID
                     WHERE cat.componentCategory = %s OR %s = "ALL"
                     ORDER BY c.componentAmount ASC
                 """
@@ -146,7 +146,7 @@ def fetch_home_query(orderBy, method, category):
                         p.componentPackage
                     FROM components c
                     JOIN categories cat ON c.categoryID = cat.categoryID
-                    JOIN packages p ON c.packageID = p.packageID
+                    LEFT JOIN packages p ON c.packageID = p.packageID
                     WHERE cat.componentCategory = %s OR %s = "ALL"
                     ORDER BY c.componentAmount DESC
                 """
@@ -161,7 +161,7 @@ def fetch_home_query(orderBy, method, category):
                     p.componentPackage
                 FROM components c
                 JOIN categories cat ON c.categoryID = cat.categoryID
-                JOIN packages p ON c.packageID = p.packageID
+                LEFT JOIN packages p ON c.packageID = p.packageID
             """
             cursor.execute(query)
 
@@ -203,33 +203,41 @@ def insert_register_query(componentName, componentPackage, componentCategory, co
     """
     try:
         cursor = mysql.connection.cursor()
+        succesFlag = False
 
-        # Get category ID or create new category
-        cursor.execute('''SELECT categoryID FROM categories WHERE componentCategory = %s''', (componentCategory,))
-        category_result = cursor.fetchone()
+        #Test for permission higher than 0
+        workerID = request.cookies.get('userID')
+        cursor.execute('''SELECT users.workerPermissions FROM users WHERE workerID = %s''', (workerID,))
+        permission = cursor.fetchone()
+        if permission[0] != 0:
+            succesFlag = True
+            # Get category ID or create new category
+            cursor.execute('''SELECT categoryID FROM categories WHERE componentCategory = %s''', (componentCategory,))
+            category_result = cursor.fetchone()
 
-        if category_result:
-            categoryID = category_result[0]
-        else:
-            cursor.execute('''INSERT INTO categories (componentCategory) VALUES (%s)''', (componentCategory,))
-            categoryID = cursor.lastrowid
-
-
-        # Get package ID or create new package type
-        cursor.execute('''SELECT packageID FROM packages WHERE componentPackage = %s''', (componentPackage,))
-        package_result = cursor.fetchone()
-
-        if package_result:
-            packageID = package_result[0]
-        else:
-            cursor.execute('''INSERT INTO packages (componentPackage) VALUES (%s)''', (componentPackage,))
-            packageID = cursor.lastrowid
+            if category_result:
+                categoryID = category_result[0]
+            else:
+                cursor.execute('''INSERT INTO categories (componentCategory) VALUES (%s)''', (componentCategory,))
+                categoryID = cursor.lastrowid
 
 
-        cursor.execute('''INSERT INTO components (componentName, componentAmount, packageID, categoryID) VALUES (%s, %s, %s, %s)''', (componentName, componentAmount, packageID, categoryID))
+            # Get package ID or create new package type
+            cursor.execute('''SELECT packageID FROM packages WHERE componentPackage = %s''', (componentPackage,))
+            package_result = cursor.fetchone()
 
-        mysql.connection.commit()
+            if package_result:
+                packageID = package_result[0]
+            else:
+                cursor.execute('''INSERT INTO packages (componentPackage) VALUES (%s)''', (componentPackage,))
+                packageID = cursor.lastrowid
+
+
+            cursor.execute('''INSERT INTO components (componentName, componentAmount, packageID, categoryID) VALUES (%s, %s, %s, %s)''', (componentName, componentAmount, packageID, categoryID))
+            mysql.connection.commit()
+
         cursor.close()
+        return succesFlag
 
     except Exception as e:
         print(f"insert_register_query: {e}")
@@ -407,7 +415,9 @@ def register_component():
                     status_msg = "No category selected or entered!"
                     return render_template('register_component.html', status_msg=status_msg)
                 
-                insert_register_query(comp_name, comp_pack, comp_cat, comp_amount)
+                if not insert_register_query(comp_name, comp_pack, comp_cat, comp_amount):
+                    status_msg = "You don't have permission for this action!"
+                    return render_template('register_component.html', status_msg=status_msg)
 
                 workerID = request.cookies.get('userID')
                 now = datetime.now().replace(microsecond=0)
@@ -417,7 +427,9 @@ def register_component():
                 return render_template('register_component.html', status_msg=status_msg)
             
             else:
-                insert_register_query(comp_name, comp_pack, comp_select, comp_amount)
+                if not insert_register_query(comp_name, comp_pack, comp_select, comp_amount):
+                    status_msg = "You don't have permission for this action!"
+                    return render_template('register_component.html', status_msg=status_msg)
                 
                 workerID = request.cookies.get('userID')
                 now = datetime.now().replace(microsecond=0)
