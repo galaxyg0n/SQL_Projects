@@ -15,6 +15,7 @@ This is done by using a database interface of your choice (MySQL Workbench, XAMP
 It is important that the schema is called "componentlayer_db" and the credentials should be:
 User: "root" 
 Pass: "toor"
+The MySQL server should also run on the default port: 3306
 ``` 
 
 <br>
