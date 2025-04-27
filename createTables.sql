@@ -12,7 +12,7 @@ CREATE TABLE users (
 CREATE TABLE transactions (
     transactionsID       INT NOT NULL AUTO_INCREMENT,
     workerID             INT,
-    componentName        VARCHAR(255),
+    componentID          INT,
 
     transactionTime      DATETIME,
     transactionAmount    INT,
