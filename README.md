@@ -12,6 +12,9 @@ pip install -r requirements.txt
 4. Setup the MySQL database using the **createTables.sql** and fill it with **dummyData.sql**
 ```
 This is done by using a database interface of your choice (MySQL Workbench, XAMPP + phpmyadmin, ...)
+It is important that the schema is called "componentlayer_db" and the credentials should be:
+User: "root" 
+Pass: "toor"
 ``` 
 
 <br>
