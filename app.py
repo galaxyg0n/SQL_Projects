@@ -134,7 +134,24 @@ def fetch_component_categories():
         return returnData
 
     except Exception as e:
-        print(f"fetch_query: {e}")
+        print(f"fetch_categories: {e}")
+
+def fetch_component_amount(compID):
+    try:
+        cursor = mysql.connection.cursor()
+
+        query = """
+            SELECT components.componentAmount FROM components WHERE componentID = %s
+        """        
+        cursor.execute(query,(compID,))
+
+        data = cursor.fetchone()
+
+        cursor.close()
+        return data[0]
+
+    except Exception as e:
+        print(f"fetch_amount: {e}")
 
 def fetch_home_query(orderBy, method, category):
     try:
@@ -210,14 +227,13 @@ def fetch_password(row, table, workerID):
 def insert_register_query(componentName, componentPackage, componentCategory, componentAmount):
     try:
         cursor = mysql.connection.cursor()
-        succesFlag = False
+        new_component_id = 0
 
         #Test for permission higher than 0
         workerID = request.cookies.get('userID')
         cursor.execute('''SELECT users.workerPermissions FROM users WHERE workerID = %s''', (workerID,))
         permission = cursor.fetchone()
         if permission[0] != 0:
-            succesFlag = True
             # Get category ID or create new category
             cursor.execute('''SELECT categoryID FROM categories WHERE componentCategory = %s''', (componentCategory,))
             category_result = cursor.fetchone()
@@ -241,20 +257,21 @@ def insert_register_query(componentName, componentPackage, componentCategory, co
 
 
             cursor.execute('''INSERT INTO components (componentName, componentAmount, packageID, categoryID) VALUES (%s, %s, %s, %s)''', (componentName, componentAmount, packageID, categoryID))
+            new_component_id = cursor.lastrowid
             mysql.connection.commit()
 
         cursor.close()
-        return succesFlag
+        return new_component_id
 
     except Exception as e:
         print(f"insert_register_query: {e}")
 
 
-def insert_transaction_query(workerID, comp_name, transactionAmount):
+def insert_transaction_query(workerID, comp_id, transactionAmount):
     try:
         cursor = mysql.connection.cursor()
         transactionTime = datetime.now().replace(microsecond=0)
-        cursor.execute(''' INSERT INTO transactions (workerID, transactionTime, componentName, transactionAmount) VALUES (%s, %s, %s, %s)''', (workerID, transactionTime, comp_name, transactionAmount))
+        cursor.execute(''' INSERT INTO transactions (workerID, transactionTime, componentID, transactionAmount) VALUES (%s, %s, %s, %s)''', (workerID, transactionTime, comp_id, transactionAmount))
         mysql.connection.commit()
         cursor.close()
 
@@ -266,21 +283,33 @@ def update_database(comp_id, comp_name, comp_pack, comp_select, comp_amount):
     try:
         cursor = mysql.connection.cursor()
 
-        cursor.execute('''SELECT packageID FROM packages WHERE componentPackage = %s''', (comp_pack,))
-        package_result = cursor.fetchone()
+        #Test for permission higher than 0
+        workerID = request.cookies.get('userID')
+        cursor.execute('''SELECT users.workerPermissions FROM users WHERE workerID = %s''', (workerID,))
+        permission = cursor.fetchone()
 
-        packID = package_result[0]
+        if permission[0] != 0:
+            cursor.execute('''SELECT packageID FROM packages WHERE componentPackage = %s''', (comp_pack,))
+            package_result = cursor.fetchone()
 
-        cursor.execute('''SELECT categoryID FROM categories WHERE componentCategory = %s''', (comp_select,))
-        category_result = cursor.fetchone()
+            packID = package_result[0]
 
-        catID = category_result[0]
+            cursor.execute('''SELECT categoryID FROM categories WHERE componentCategory = %s''', (comp_select,))
+            category_result = cursor.fetchone()
 
-        query = f"""
-            UPDATE components
-            SET componentName = '{comp_name}', componentAmount = {comp_amount}, packageID = {packID}, categoryID = {catID}
-            WHERE componentID = {comp_id};
-        """
+            catID = category_result[0]
+
+            query = f"""
+                UPDATE components
+                SET componentName = '{comp_name}', componentAmount = {comp_amount}, packageID = {packID}, categoryID = {catID}
+                WHERE componentID = {comp_id};
+            """
+        else:
+            query = f"""
+                UPDATE components
+                SET componentAmount = {comp_amount}
+                WHERE componentID = {comp_id}
+            """
 
         cursor.execute(query)
         mysql.connection.commit()
@@ -327,10 +356,11 @@ def update_component():
         comp_select = str(request.form.get('component_selector'))
         comp_amount = str(request.form.get('component_amount'))
 
+        current_comp_amount = fetch_component_amount(comp_id)
         update_database(comp_id, comp_name, comp_pack, comp_select, comp_amount)
 
         workerID = request.cookies.get('userID')
-        insert_transaction_query(workerID, comp_name, comp_amount)
+        insert_transaction_query(workerID, comp_id, str(int(comp_amount)-current_comp_amount))
 
         if str(request.args.get('comp')) != 'None':
             arg = str(request.args.get('comp'))
@@ -367,23 +397,25 @@ def register_component():
                     status_msg = "No category selected or entered!"
                     return render_template('register_component.html', status_msg=status_msg)
                 
-                if not insert_register_query(comp_name, comp_pack, comp_cat, comp_amount):
+                new_comp_id = insert_register_query(comp_name, comp_pack, comp_cat, comp_amount)
+                if not new_comp_id:
                     status_msg = "You don't have permission for this action!"
                     return render_template('register_component.html', status_msg=status_msg)
 
                 workerID = request.cookies.get('userID')
-                insert_transaction_query(workerID, comp_name, comp_amount)
+                insert_transaction_query(workerID, new_comp_id, comp_amount)
 
                 status_msg = "Component has been registered"
                 return render_template('register_component.html', status_msg=status_msg)
             
             else:
-                if not insert_register_query(comp_name, comp_pack, comp_select, comp_amount):
+                new_comp_id = insert_register_query(comp_name, comp_pack, comp_select, comp_amount)
+                if not new_comp_id:
                     status_msg = "You don't have permission for this action!"
                     return render_template('register_component.html', status_msg=status_msg)
                 
                 workerID = request.cookies.get('userID')
-                insert_transaction_query(workerID, comp_name, comp_amount)
+                insert_transaction_query(workerID, new_comp_id, comp_amount)
 
                 status_msg = "Component has been registered"
                 return render_template('register_component.html', status_msg=status_msg)
