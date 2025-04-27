@@ -58,15 +58,13 @@
                 </tr>
                 {% if not data[-1] == "No_print" %}
                     {% for item in data %}
-                        {% if item[3] == arg %}
-                            <tr>
-                                <td>{{ item[1] }}</td>
-                                <td>{{ item[4] }}</td>
-                                <td>{{ item[3] }}</td>
-                                <td>{{ item[2] }}</td>
-                                <td><button onclick='openForm("{{ item[0] }}", "{{ item[1] }}", "{{ item[4] }}", "{{ item[2] }}")'>Edit</button></td>
-                            </tr>
-                        {% endif %}
+                        <tr>
+                            <td>{{ item[1] }}</td>
+                            <td>{{ item[4] }}</td>
+                            <td>{{ item[3] }}</td>
+                            <td>{{ item[2] }}</td>
+                            <td><button onclick='openForm("{{ item[0] }}", "{{ item[1] }}", "{{ item[4] }}", "{{ item[2] }}")'>Edit</button></td>
+                        </tr>
                     {% endfor %}
                 {% endif %}
             </table>
@@ -85,7 +83,7 @@
                 <label for="category_select">Select or enter category</label>
                 <select name="component_selector" class="form-select form-select-lg">
                     <option value="none" selected>None</option>
-                    {% for category in data|map(attribute=3)|unique %}
+                    {% for category in selectorData %}
                         {% if category == arg %}
                             <option value="{{ category }}" selected>{{ category }}</option>
                         {% else %}

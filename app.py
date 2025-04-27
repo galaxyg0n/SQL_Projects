@@ -45,6 +45,25 @@ def fetch_query(row, table, whereCat, where):
     except Exception as e:
         print(f"fetch_query: {e}")
 
+def fetch_log():
+    try:
+        cursor = mysql.connection.cursor()
+        cursor.execute(''' SELECT * FROM transactions ORDER BY transactionTime DESC ''')
+
+        data = cursor.fetchall()
+
+        returnData = []
+        for item in data:
+            returnData.append(item)
+
+        cursor.close()
+
+        return returnData
+
+    except Exception as e:
+        print(f"fetch_log: {e}")
+
+
 def fetch_update_query(cat_sel, selectedCategory):
     try:
         if cat_sel == 1:
@@ -60,8 +79,9 @@ def fetch_update_query(cat_sel, selectedCategory):
                 FROM components c
                 JOIN categories cat ON c.categoryID = cat.categoryID
                 JOIN packages p ON c.packageID = p.packageID
+                WHERE cat.componentCategory = %s
             """
-            cursor.execute(query)
+            cursor.execute(query, (selectedCategory,))
 
         data = cursor.fetchall()
         cursor.close()
@@ -276,7 +296,7 @@ def log():
     if not 'user' in session:
         return redirect(url_for('login'))
     
-    data = fetch_query("*", "transactions", '', '')
+    data = fetch_log()
 
     return render_template('log.html', data=data)
 
